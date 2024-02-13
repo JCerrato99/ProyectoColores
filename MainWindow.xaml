@@ -7,20 +7,26 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="457.377" Width="818.442">
     <Grid>
-        <TextBox x:Name="txt1" TextAlignment="Center" FontSize="20" FontFamily="Comic Sans MS"  TextWrapping="Wrap" Margin="61.738,53.902,474.695,230.092" Text="Aqui se prueba que el botón 1 cambia entre 2 tipos de fuente"/>
+        <TextBox x:Name="txt1" TextAlignment="Center" FontSize="20" FontFamily="Arial"  TextWrapping="Wrap" Margin="61.738,53.902,474.695,230.092" Text="Aqui se prueba que el botón 1 cambia entre 2 tipos de fuente"/>
 
-        <Button x:Name="btn1" Margin="61.738,323.78,518.597,41.159">Boton1</Button>
+        <Button x:Name="btn1" Click="BConf1_Click" Margin="61.738,323.78,518.597,41.159">Boton1</Button>
         <TextBox x:Name="txt2" TextAlignment="Center" FontSize="20" FontFamily="Comic Sans MS"  TextWrapping="Wrap" Margin="467.835,53.902,39.787,230.092">Aqui el texto lo cambiamos con una lista para probar de otra forma el cambio de fuente</TextBox>
 
-        <ComboBox x:Name="Ffuente" SelectionChanged="Ffuente_SelectionChanged" VerticalAlignment="Top" Padding="10" FontSize="18" Height="61.438" Margin="409.817,323.78,10,0" RenderTransformOrigin="0.5,0.5" >
+        <ComboBox x:Name="Ffuente" 
+          SelectionChanged="Ffuente_SelectionChanged" 
+          VerticalAlignment="Top" 
+          Padding="10" 
+          FontSize="18" 
+          Height="61.438" 
+          Margin="409.817,323.78,10,0" 
+          RenderTransformOrigin="0.5,0.5" >
+
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="{Binding Name}" Width="16" Height="16" Margin="2" />
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
+                    <TextBlock Text="{Binding Source}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
+
         </ComboBox>
     </Grid>
 </Window>

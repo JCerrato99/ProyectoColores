@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 // Para poder usar config y PropertyInfo
 using System.Configuration;
 using System.Reflection;
@@ -34,55 +23,52 @@ namespace ProyectoColores
             contenido_config = LeerArchivo(@"config.txt");
             if (contenido_config == "")
             {
-                contenido_config = "Comic Sans MS";
+                contenido_config = "Arial";
             }
 
-
             // Usa los valores de App.config
-            string backgroundSrt = ConfigurationManager.AppSettings["FuentePrincipal"];
-            Color backgroundCColor = (Color)ColorConverter.ConvertFromString(backgroundSrt);
+            string fuentePrincipal = ConfigurationManager.AppSettings["FuentePrincipal"];
 
-            string Adorno2srt = ConfigurationManager.AppSettings["Fuente2"];
-            Color Adorno2color = (Color)ColorConverter.ConvertFromString(Adorno2srt);
-            txt2.Background = new SolidColorBrush(Adorno2color);
+            // Establece la fuente principal
+            txt2.FontFamily = new FontFamily(fuentePrincipal);
 
-            // Carga datos al ComboBox de los posibles colores del sistema.
-            Ffuente.ItemsSource = typeof(Colors).GetProperties();
+            // Carga datos al ComboBox de las fuentes de texto disponibles
+            Ffuente.ItemsSource = Fonts.SystemFontFamilies;
         }
+
 
         private void Ffuente_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Lee el valor seleccionado
-            string colorselecionadoSrt = (Ffuente.SelectedItem as PropertyInfo).GetValue(Ffuente, null).ToString();
-            txt2.Text = colorselecionadoSrt;
-            // actualiza el color de fondo, guardando la selección
-            Color colorselecionado = (Color)(Ffuente.SelectedItem as PropertyInfo).GetValue(Ffuente, null);
+            // Obtener la fuente de texto seleccionada
+            FontFamily selectedFont = Ffuente.SelectedItem as FontFamily;
+
+            // Establecer la fuente de texto del TextBox txt2
+            txt2.FontFamily = selectedFont;
+
+            // Actualizar la configuración en el archivo .config
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings["FuentePrincipal"].Value = colorselecionado + "";
+            config.AppSettings.Settings["FuentePrincipal"].Value = selectedFont.Source;
             config.Save();
-            // Carga ese valor, de lo contrario para ver los cambios tiene que ejecutarse otra vez.
         }
 
         private void BConf1_Click(object sender, RoutedEventArgs e)
         {
-            //string contenido = LeerArchivo(@"config.txt");
-            if (contenido_config == "Arial")
+            // Verificar la fuente actual y cambiarla
+            if (txt1.FontFamily.Source == "Arial")
             {
-                btn1.Content = "Activa Azul";
-                contenido_config = "Verdana";
-                Color color_config = (Color)ColorConverter.ConvertFromString(contenido_config);
-                txt1.Background = new SolidColorBrush(color_config);
+                btn1.Content = "Cambiar a Verdana";
+                txt1.FontFamily = new FontFamily("Verdana");
             }
             else
             {
-                btn1.Content = "Desactiva Azul";
-                contenido_config = "Arial";
-                Color color_config = (Color)ColorConverter.ConvertFromString(contenido_config);
-                txt1.Background = new SolidColorBrush(color_config);
+                btn1.Content = "Cambiar a Arial";
+                txt1.FontFamily = new FontFamily("Arial");
             }
-            // Actualizando el ficheor .config
-            EscribirEnArchivo(contenido_config, @"config.txt");
+
+            // Actualizar la configuración en el archivo .config
+            EscribirEnArchivo(txt1.FontFamily.Source, @"config.txt");
         }
+
         public void EscribirEnArchivo(string texto, string rutaArchivo)
         {
             // Comprobamos si el archivo ya existe
